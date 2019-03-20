@@ -17,10 +17,18 @@ GISS_temp = readtable('GISS_temp.csv');
 % X, Y, T, albedo
 % X = longitude in degrees east
 % Y = latitude in degrees north
-% T = time in months since 1960-01-01
+% T = time in months since 1960-01-01 (data from Nov 1986, Dec 1986, and
+% Jan 1987)
 % albedo = in percent, missing values are replaced with 999.99
+lon_alb = ncread('albedo.nc','X');
+lat_alb = nc('albedo.nc','Y');
+time_alb = double(ncread('albedo.nc','T'));
+alb = double(ncread('albedo.nc','albedo'));
 
-lat_albedo = ncread('albedo.nc','Y');
-lon_albedo = ncread('albedo.nc','X');
-time_albedo = ncread('albedo.nc','T');
-albedo = ncread('albedo.nc','albedo');
+figure(1); clf
+worldmap world
+contourfm(lat_alb, lon_alb, alb(:,:,1)','linecolor','none');
+c = colorbar('southoutside'); 
+c.Label.String = 'albedo';
+geoshow('landareas.shp','FaceColor','black');
+title('albedo')
